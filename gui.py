@@ -25,19 +25,23 @@ class App(tk.Tk):
 
         # buttons should be after container
 
-        self.homeButton = tk.Button(self.topBar, text="Home", bg="grey9", fg="white", font=("Arial", 12))
+        self.homeButton = tk.Button(self.topBar, text="Home",
+         bg="grey9", fg="white", font=("Arial", 12))
         self.homeButton.pack(side="left", padx=10)
 
 
         
         self.addExerciseButton = tk.Button(
-            self.container, text="+", font=("Arial", 20, "bold"), 
+            self.bottomBar, text="+", font=("Arial", 20, "bold"), 
             bg="grey9", fg="white", width=3, height=1, 
             relief="ridge", borderwidth=5)# Border styling
+        self.addExerciseButton.pack(pady=10)# pady raises it from the bottom a bit
 
-        #self.addExerciseButton.grid(row=0, column=0,pady=500,padx=170)  # Position of the button
-        self.addExerciseButton.grid(row=0, column=0, pady=500, padx=170)
-        self.addExerciseButton.lift()
+        self.settingsButton = tk.Button(self.topBar, text="Settings",
+         bg="grey9", fg="white", font=("Arial", 12))
+        self.settingsButton.pack(side="right",padx=10)
+
+
         self.frames = {}                      
 
     def show_frame(self, page):
