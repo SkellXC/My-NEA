@@ -33,7 +33,7 @@ class App(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, Settings):# Loop through the pages
+        for F in (HomePage, Settings,ExerciseList):# Loop through the pages
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -43,15 +43,23 @@ class App(tk.Tk):
         self.homeButton = tk.Button(self.topBar, text="Home",
          bg="grey9", fg="white", font=("Arial", 12),
          command=lambda: self.show_frame(HomePage))
-        
         self.homeButton.pack(side="left", padx=10)
+
 
         self.settingsButton = tk.Button(self.topBar, text="Settings",
          bg="grey9", fg="white", font=("Arial", 12),
-         command=lambda: self.show_frame(Settings)
-         )
-        
+         command=lambda: self.show_frame(Settings))
         self.settingsButton.pack(side="right",padx=10)
+
+        self.addExerciseButton = tk.Button(
+            self.bottomBar, text="+", font=("Arial", 20, "bold"), 
+            bg="grey9", fg="white", width=3, height=1, 
+            relief="ridge", borderwidth=5,# Border styling
+            command=lambda: self.show_frame(ExerciseList))
+        self.addExerciseButton.pack(pady=10)# pady raises it from the bottom a bit
+
+
+
 
     def show_frame(self, page):
         frame = self.frames[page]
@@ -75,6 +83,15 @@ class Settings(tk.Frame):
         label.pack(pady=20,padx=150)  # Add some space
 
         # Button to switch back to Home Page
+
+
+class ExerciseList(tk.Frame):
+    def __init__(self,parent,controller):
+        super().__init__(parent,bg="grey12")
+        label = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
+        label.pack(side="top", pady=20,padx=150)
+
+
 
 
 if __name__ == "__main__":
