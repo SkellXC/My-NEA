@@ -33,7 +33,7 @@ class App(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, Settings,ExerciseList):# Loop through the pages
+        for F in (HomePage, Settings,ExerciseList,ChestGroup):# Loop through the pages
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -75,7 +75,7 @@ class HomePage(tk.Frame):
         label.pack(side="top", pady=20,padx=150)
 
 class Settings(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent,controller):
         super().__init__(parent, bg="grey12")  # Create a frame inside parent (container)
 
         # Page title
@@ -88,11 +88,31 @@ class Settings(tk.Frame):
 class ExerciseList(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
+
+
+
         label = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
         label.pack(side="top", pady=20,padx=150)
+        
+
+        
+        self.chestGroup = tk.Button(
+        self, text="test", font=("Arial", 20, "bold"), 
+        bg="grey9", fg="white", width=3, height=1, 
+        relief="ridge", borderwidth=5,# Border styling
+        command=lambda: controller.show_frame(ChestGroup))
+
+        self.chestGroup.pack(pady=10)# pady raises it from the bottom a bit
 
 
 
+
+
+class ChestGroup(tk.Frame):
+    def __init__(self,parent,controller):
+        super().__init__(parent,bg="grey12")
+        label = tk.Label(self, text="Chest Exercises",font=("Arial",24), bg="grey12", fg="white")
+        label.pack(side="top",pady=20,padx=50)
 
 if __name__ == "__main__":
     app = App()
