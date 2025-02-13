@@ -33,7 +33,8 @@ class App(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, Settings,ExerciseList,ChestGroup):# Loop through the pages
+        for F in (HomePage, Settings,ExerciseList,# Loop through the pages
+        ChestGroup,BackGroup,LegsGroup):
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -93,26 +94,60 @@ class ExerciseList(tk.Frame):
 
         label = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
         label.pack(side="top", pady=20,padx=150)
-        
 
-        
-        self.chestGroup = tk.Button(
-        self, text="test", font=("Arial", 20, "bold"), 
-        bg="grey9", fg="white", width=3, height=1, 
-        relief="ridge", borderwidth=5,# Border styling
-        command=lambda: controller.show_frame(ChestGroup))
-
+        # Buttons for the exercise groups
+        self.chestGroup = tk.Button(self,text="Chest",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(ChestGroup))
         self.chestGroup.pack(pady=10)# pady raises it from the bottom a bit
 
+        self.BackGroup = tk.Button(self,text="Back",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(BackGroup))
+        self.BackGroup.pack(pady=10)# pady raises it from the bottom a bit
+
+        self.LegsGroup = tk.Button(self,text="Legs",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(LegsGroup))
+        self.LegsGroup.pack(pady=10)# pady raises it from the bottom a bit
+        
 
 
-
+"""
+Frames for the exercise pages
+"""
 
 class ChestGroup(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
         label = tk.Label(self, text="Chest Exercises",font=("Arial",24), bg="grey12", fg="white")
         label.pack(side="top",pady=20,padx=50)
+
+        self.BackButton = tk.Button(self, text="Back",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(ExerciseList))
+        self.BackButton.pack(side="top")
+
+class BackGroup(tk.Frame):
+    def __init__(self,parent,controller):
+        super().__init__(parent,bg="grey12")
+        label = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
+        label.pack(side="top",pady=20,padx=50)
+        self.BackButton = tk.Button(self, text="Back",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(ExerciseList))
+        self.BackButton.pack(side="top")
+
+class LegsGroup(tk.Frame):
+    def __init__(self,parent,controller):
+        super().__init__(parent,bg="grey12")
+        label = tk.Label(self, text="Legs Exercises",font=("Arial",24), bg="grey12", fg="white")
+        label.pack(side="top",pady=20,padx=50)
+
+        self.BackButton = tk.Button(self, text="Back",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.show_frame(ExerciseList))
+        self.BackButton.pack(side="top")
 
 if __name__ == "__main__":
     app = App()
