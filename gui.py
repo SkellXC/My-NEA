@@ -26,11 +26,6 @@ class App(tk.Tk):
         # buttons should be after container
 
 
-
-
-
-
-
         self.frames = {}
 
         for F in (HomePage, Settings,ExerciseList,# Loop through the pages
@@ -120,23 +115,68 @@ Frames for the exercise pages
 class ChestGroup(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
-        label = tk.Label(self, text="Chest Exercises",font=("Arial",24), bg="grey12", fg="white")
+        label = tk.Label(self, text="Chest Exercises",
+        font=("Arial",24), bg="grey12", fg="white")
         label.pack(side="top",pady=20,padx=50)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
          command=lambda: controller.show_frame(ExerciseList))
-        self.BackButton.pack(side="top")
+        self.BackButton.pack(side="top",pady=5)
+
+        self.benchPressBb = tk.Button(self, text="Barbell Bench Press",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.benchPressBb.pack(side="top",pady=10)
+        
+        self.benchPressDb = tk.Button(self, text="Dumbbell Bench Press",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.benchPressDb.pack(side="top",pady=10)
+
+        self.pushUps = tk.Button(self, text="Push-Ups",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.pushUps.pack(side="top",pady=10)
+
+        self.pecFly = tk.Button(self, text="Pec Fly",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.pecFly.pack(side="top",pady=10)
+
 
 class BackGroup(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
         label = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
         label.pack(side="top",pady=20,padx=50)
+
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
          command=lambda: controller.show_frame(ExerciseList))
-        self.BackButton.pack(side="top")
+        self.BackButton.pack(side="top",pady=5)
+
+        self.deadlift = tk.Button(self, text="Deadlift",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.deadlift.pack(side="top",pady=10)
+        
+
+        self.latPulldown = tk.Button(self, text="Lat Pulldown",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.latPulldown.pack(side="top",pady=10)
+
+        self.lowRow = tk.Button(self, text="Low Row",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.lowRow.pack(side="top",pady=10)
+
+        self.barbellRow = tk.Button(self, text="Barbell Row",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.barbellRow.pack(side="top",pady=10)
+
 
 class LegsGroup(tk.Frame):
     def __init__(self,parent,controller):
@@ -147,7 +187,28 @@ class LegsGroup(tk.Frame):
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
          command=lambda: controller.show_frame(ExerciseList))
-        self.BackButton.pack(side="top")
+        self.BackButton.pack(side="top",pady=5)
+
+        self.barbellSquats = tk.Button(self, text="Barbell Squats",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.barbellSquats.pack(side="top",pady=10)
+
+        self.splitSquats = tk.Button(self, text="Split Squats",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.splitSquats.pack(side="top",pady=10)
+
+        self.legRaises = tk.Button(self, text="Leg Raises",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.legRaises.pack(side="top",pady=10)
+
+        self.hamstringCurls = tk.Button(self, text="Hamstring Curls",
+         bg="grey9", fg="white", font=("Arial", 14),
+         command=lambda: controller.show_frame(HomePage))
+        self.hamstringCurls.pack(side="top",pady=10)
+  
 
 if __name__ == "__main__":
     app = App()
