@@ -113,6 +113,8 @@ Frames for the exercise pages
 """
 
 class ChestGroup(tk.Frame):
+    # Class holds all the buttons for
+    # Chest exercises.
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
         label = tk.Label(self, text="Chest Exercises",
@@ -147,6 +149,8 @@ class ChestGroup(tk.Frame):
 
 class BackGroup(tk.Frame):
     def __init__(self,parent,controller):
+            # Class holds all the buttons for
+            # Back exercises.
         super().__init__(parent,bg="grey12")
         label = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
         label.pack(side="top",pady=20,padx=50)
@@ -180,6 +184,8 @@ class BackGroup(tk.Frame):
 
 class LegsGroup(tk.Frame):
     def __init__(self,parent,controller):
+            # Class holds all the buttons for
+            # Leg exercises.
         super().__init__(parent,bg="grey12")
         label = tk.Label(self, text="Legs Exercises",font=("Arial",24), bg="grey12", fg="white")
         label.pack(side="top",pady=20,padx=50)
@@ -210,6 +216,6 @@ class LegsGroup(tk.Frame):
         self.hamstringCurls.pack(side="top",pady=10)
   
 
-if __name__ == "__main__":
+if __name__ == "__main__":# Convention that indicates that this file is meant to be run
     app = App()
     app.mainloop()
