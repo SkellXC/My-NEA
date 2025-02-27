@@ -29,7 +29,8 @@ class App(tk.Tk):
         self.frames = {}
 
         for F in (HomePage, Settings,ExerciseList,# Loop through the pages
-        ChestGroup,BackGroup,LegsGroup):
+        ChestGroup,BackGroup,LegsGroup,
+        ExercisePage):
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -85,8 +86,6 @@ class ExerciseList(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
 
-
-
         label = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
         label.pack(side="top", pady=20,padx=150)
 
@@ -105,8 +104,6 @@ class ExerciseList(tk.Frame):
          bg="grey9", fg="white", font=("Arial", 12),
          command=lambda: controller.show_frame(LegsGroup))
         self.LegsGroup.pack(pady=10)# pady raises it from the bottom a bit
-        
-
 
 """
 Frames for the exercise pages
@@ -215,6 +212,30 @@ class LegsGroup(tk.Frame):
          command=lambda: controller.show_frame(HomePage))
         self.hamstringCurls.pack(side="top",pady=10)
   
+
+class ExercisePage(tk.Frame):
+    def __init__(self,parent,controller,name,group):
+        super().__init__(parent,bg="grey12")
+        self.name = name
+        self.group = group# Can be used to organize data according to the muscle group
+
+        label = tk.Label(self, text=self.name, font=("Arial", 24), bg="grey12", fg="white")
+        label.pack(side="top", pady=20,padx=150)# Places a label with the exercise name at the top
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":# Convention that indicates that this file is meant to be run
     app = App()
