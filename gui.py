@@ -34,6 +34,16 @@ class App(tk.Tk):
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
+
+        exercisesChest = {
+        "Barbell Bench Press": ChestGroup,
+        "Dumbbell Bench Press": ChestGroup,
+        "Push-Ups": ChestGroup,
+        "Pec Fly": ChestGroup
+        }
+
+
+
         
         self.show_frame(HomePage)
 
@@ -68,16 +78,16 @@ class App(tk.Tk):
 class HomePage(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
-        label = tk.Label(self, text="Home", font=("Arial", 24), bg="grey12", fg="white")
-        label.pack(side="top", pady=20,padx=150)
+        homeLabel = tk.Label(self, text="Home", font=("Arial", 24), bg="grey12", fg="white")
+        homeLabel.pack(side="top", pady=20,padx=150)
 
 class Settings(tk.Frame):
     def __init__(self, parent,controller):
         super().__init__(parent, bg="grey12")  # Create a frame inside parent (container)
 
         # Page title
-        label = tk.Label(self, text="Settings", font=("Arial", 24), bg="grey12", fg="white")
-        label.pack(pady=20,padx=150)  # Add some space
+        settingsLabel = tk.Label(self, text="Settings", font=("Arial", 24), bg="grey12", fg="white")
+        settingsLabel.pack(pady=20,padx=150)  # Add some space
 
         # Button to switch back to Home Page
 
@@ -86,8 +96,8 @@ class ExerciseList(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
 
-        label = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
-        label.pack(side="top", pady=20,padx=150)
+        exercisesLabel = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
+        exercisesLabel.pack(side="top", pady=20,padx=150)
 
         # Buttons for the exercise groups
         self.chestGroup = tk.Button(self,text="Chest",
@@ -114,9 +124,9 @@ class ChestGroup(tk.Frame):
     # Chest exercises.
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
-        label = tk.Label(self, text="Chest Exercises",
+        chestLabel = tk.Label(self, text="Chest Exercises",
         font=("Arial",24), bg="grey12", fg="white")
-        label.pack(side="top",pady=20,padx=50)
+        chestLabel.pack(side="top",pady=20,padx=50)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -149,8 +159,8 @@ class BackGroup(tk.Frame):
             # Class holds all the buttons for
             # Back exercises.
         super().__init__(parent,bg="grey12")
-        label = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
-        label.pack(side="top",pady=20,padx=50)
+        backLabel = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
+        backLabel.pack(side="top",pady=20,padx=50)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -184,8 +194,8 @@ class LegsGroup(tk.Frame):
             # Class holds all the buttons for
             # Leg exercises.
         super().__init__(parent,bg="grey12")
-        label = tk.Label(self, text="Legs Exercises",font=("Arial",24), bg="grey12", fg="white")
-        label.pack(side="top",pady=20,padx=50)
+        legsLabel = tk.Label(self, text="Legs Exercises",font=("Arial",24), bg="grey12", fg="white")
+        legsLabel.pack(side="top",pady=20,padx=50)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -211,25 +221,24 @@ class LegsGroup(tk.Frame):
          bg="grey9", fg="white", font=("Arial", 14),
          command=lambda: controller.show_frame(HomePage))
         self.hamstringCurls.pack(side="top",pady=10)
-  
+
+
+"""
+1.	Create a dictionary to store each of the exercises.
+2.	Loop through the dictionary and create instances of exercise page for each exercise
+3.	Store each of these in self.frames 
+4.	Map the pages over
+5.	Open them with show_frame
+"""
 
 class ExercisePage(tk.Frame):
-    def __init__(self,parent,controller,name,group):
+    def __init__(self,parent,controller,name="", group=""):
         super().__init__(parent,bg="grey12")
         self.name = name
         self.group = group# Can be used to organize data according to the muscle group
 
-        label = tk.Label(self, text=self.name, font=("Arial", 24), bg="grey12", fg="white")
-        label.pack(side="top", pady=20,padx=150)# Places a label with the exercise name at the top
-
-
-
-
-
-
-
-
-
+        exercisePageLabel = tk.Label(self, text=self.name, font=("Arial", 24), bg="grey12", fg="white")
+        exercisePageLabel.pack(side="top", pady=20,padx=150)# Places a label with the exercise name at the top
 
 
 
