@@ -35,11 +35,20 @@ class App(tk.Tk):
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
 
-        exercisesChest = {
-        "Barbell Bench Press": ChestGroup,
-        "Dumbbell Bench Press": ChestGroup,
-        "Push-Ups": ChestGroup,
-        "Pec Fly": ChestGroup
+        self.exercises = {
+
+            "Barbell Bench Press": "Chest",
+            "Dumbbell Bench Press": "Chest",
+            "Push-Ups": "Chest",
+            "Pec Fly": "Chest",
+            "Deadlift": "Back",
+            "Lat Pulldown": "Back",
+            "Low Row": "Back",
+            "Barbell Row": "Back",
+            "Barbell Squats": "Legs",
+            "Split Squats": "Legs",
+            "Leg Raises": "Legs",
+            "Hamstring Curls": "Legs"
         }
 
 
@@ -69,9 +78,23 @@ class App(tk.Tk):
 
 
     def show_frame(self, page):
-        frame = self.frames[page]
-        frame.tkraise()# Display the frame
-
+        # If page is a string (exercise name)
+        if isinstance(page, str) and page in self.exercises:
+            # Check if we've already created this exercise page
+            if page not in self.frames:
+                # Create the frame
+                exercise_frame = ExercisePage(self.container, self, 
+                                             name=page, 
+                                             group=self.exercises[page])# Create an instance of the page
+                self.frames[page] = exercise_frame
+                exercise_frame.grid(row=0, column=0, sticky="nsew")
+            
+            frame = self.frames[page]
+        else:
+            # Original behavior for class-based pages
+            frame = self.frames[page]
+            
+        frame.tkraise()
 
     
     
@@ -135,8 +158,8 @@ class ChestGroup(tk.Frame):
 
         self.benchPressBb = tk.Button(self, text="Barbell Bench Press",
          bg="grey9", fg="white", font=("Arial", 14),
-         command=lambda: controller.show_frame(HomePage))
-        self.benchPressBb.pack(side="top",pady=10)
+         command=lambda: controller.show_frame("Barbell Bench Press"))
+        self.benchPressBb.pack(side="top",pady=10,padx=30)
         
         self.benchPressDb = tk.Button(self, text="Dumbbell Bench Press",
          bg="grey9", fg="white", font=("Arial", 14),
@@ -238,10 +261,26 @@ class ExercisePage(tk.Frame):
         self.group = group# Can be used to organize data according to the muscle group
 
         exercisePageLabel = tk.Label(self, text=self.name, font=("Arial", 24), bg="grey12", fg="white")
-        exercisePageLabel.pack(side="top", pady=20,padx=150)# Places a label with the exercise name at the top
+        exercisePageLabel.pack(side="top", pady=20,padx=0)# Places a label with the exercise name at the top
 
+        weightInputFrame = tk.Frame(self, bg="grey12", width=120, height=80)
+        weightInputFrame.pack(side="top", pady=10)
+        weightInputFrame.pack_propagate(False)  # Prevents the frame from resizing to fit its children
+        
+        self.weightInput = tk.Text(weightInputFrame, font=("Arial", 32))# Create the text widget inside the fixed frame
+        self.weightInput.tag_configure("center", justify="center") 
+        self.weightInput.insert("1.0", "0","center")# Set 0 as the default value
+        self.weightInput.pack(fill="both", expand=True)
+        
 
+        repsInputFrame = tk.Frame(self, bg="grey12", width=120, height=80)# Create the textbox frame for reps
+        repsInputFrame.pack(side="top", pady=10)
+        repsInputFrame.pack_propagate(False)  
 
+        self.repsInput = tk.Text(repsInputFrame, font=("Arial", 32))
+        self.repsInput.tag_configure("center", justify="center") 
+        self.repsInput.insert("1.0", "0","center")# Set 0 as the default value
+        self.repsInput.pack(fill="both", expand=True)
 
 
 
