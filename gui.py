@@ -1,4 +1,30 @@
 import tkinter as tk
+import sqlite3
+from datetime import datetime
+
+# Database
+connection = sqlite3.connect("workout.db")# Create and connect to the database
+cursor = connection.cursor()# Connects the database
+
+# Create the rows in the database
+# id is the primary key
+myTable = """CREATE TABLE IF NOT EXISTS exercises(
+    id INTEGER PRIMARY KEY,
+    exerciseName TEXT NOT NULL,
+    weight INTEGER NOT NULL,
+    repetitions INTEGER NOT NULL,
+    date TEXT NOT NULL)"""
+cursor.execute(myTable)
+
+# Placeholder data
+cursor.execute("INSERT INTO exercises (exerciseName, weight, repetitions, date)"
+"    VALUES ('Bench Press', 100, 10, '2025-03-08')")
+
+#cursor.execute("SELECT * FROM exercises WHERE weight > 50")
+
+
+
+
 
 class App(tk.Tk):
     # Inherit from Tkinter so it behaves like a normal Tkinter window
@@ -96,8 +122,7 @@ class App(tk.Tk):
             
         frame.tkraise()
 
-    
-    
+  
 class HomePage(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
@@ -277,6 +302,7 @@ class ExercisePage(tk.Frame):
         self.weightInput.tag_configure("center", justify="center") 
         self.weightInput.insert("1.0", "0","center")# Set 0 as the default value
         self.weightInput.pack(fill="both", expand=True)
+        self.weightInput.bind("<KeyPress>", self.validate_integer_input)
         
         # Buttons
         weightFrame = tk.Frame(self, bg="grey12")
@@ -292,7 +318,7 @@ class ExercisePage(tk.Frame):
         Same funciton as above, just for the repetitions button
         """
 
-        # Textbox
+        # Textbox for reps
         repsInputFrame = tk.Frame(self, bg="grey12", width=120, height=80)# Create the textbox frame for reps
         repsInputFrame.pack(side="top", pady=10)
         repsInputFrame.pack_propagate(False)  
@@ -301,11 +327,13 @@ class ExercisePage(tk.Frame):
         self.repsInput.tag_configure("center", justify="center") 
         self.repsInput.insert("1.0", "0","center")# Set 0 as the default value
         self.repsInput.pack(fill="both", expand=True)
+        self.repsInput.bind("<KeyPress>", self.validate_integer_input)
 
-        # Buttons
+        # Buttons for reps
         repsFrame = tk.Frame(self, bg="grey12")
         repsFrame.pack(side="top", pady=10)# Create a frame for the reps increment/decrement button
         self.repsValue = tk.IntVar(value=0)# Default value
+        
 
         repsDecrement = tk.Button(repsFrame, text="-", font=("Arial", 20), command=self.decrementReps)
         repsDecrement.pack(side="left")
@@ -313,7 +341,7 @@ class ExercisePage(tk.Frame):
         repsIncrement.pack(side="left")       
 
         # Save the set. Need to connect it to the database
-        saveButton = tk.Button(self, text="Save", font=("Arial", 20))
+        saveButton = tk.Button(self, text="Save", font=("Arial", 20),command=self.saveSet)
         saveButton.pack(side="top", pady=15)
 
     def incrementWeight(self):
@@ -323,10 +351,10 @@ class ExercisePage(tk.Frame):
         self.updateTextbox(self.weightInput, -5)
 
     def incrementReps(self):
-        self.updateTextbox(self.repsInput, 5)
+        self.updateTextbox(self.repsInput, 1)
 
     def decrementReps(self):
-        self.updateTextbox(self.repsInput, -5)
+        self.updateTextbox(self.repsInput, -1)
 
     def updateTextbox(self, textbox, change):
         try:
@@ -338,6 +366,25 @@ class ExercisePage(tk.Frame):
         textbox.delete("1.0", "end")# Delete first line at the beginning of the text box
         textbox.insert("1.0", str(newValue), "center")# Insert at the first line (hence 1.0)
 
+    def saveSet(self):
+        weight = self.weightInput.get("1.0", "end").strip()
+        reps = self.repsInput.get("1.0", "end").strip()
+        date = datetime.now().strftime("%Y-%m-%d")
+
+        cursor.execute("INSERT INTO exercises (exerciseName, weight, repetitions, date) Values (?, ?, ?, ?)",
+        (self.name, weight, reps, date))
+
+        connection.commit()# Commit the changes to the database (else they are stored in memory)
+        cursor.execute("SELECT * FROM exercises")
+        results = cursor.fetchall()
+        print(results)
+
+    def validate_integer_input(self, event):
+        if event.char.isdigit() or event.keysym in ("BackSpace", "Delete", "Left", "Right"):
+            # keysym allows these keys to be used as well as integers
+            return
+        else:
+            return "break"# Cancels the keypress
 
 if __name__ == "__main__":# Convention that indicates that this file is meant to be run
     app = App()
