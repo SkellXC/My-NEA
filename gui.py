@@ -20,7 +20,7 @@ cursor.execute(myTable)
 cursor.execute("INSERT INTO exercises (exerciseName, weight, repetitions, date)"
 "    VALUES ('Bench Press', 100, 10, '2025-03-08')")
 
-#cursor.execute("SELECT * FROM exercises WHERE weight > 50")
+
 
 
 
@@ -375,9 +375,9 @@ class ExercisePage(tk.Frame):
         (self.name, weight, reps, date))
 
         connection.commit()# Commit the changes to the database (else they are stored in memory)
-        cursor.execute("SELECT * FROM exercises")
+        """cursor.execute("SELECT * FROM exercises")
         results = cursor.fetchall()
-        print(results)
+        print(results)"""
 
     def validate_integer_input(self, event):
         if event.char.isdigit() or event.keysym in ("BackSpace", "Delete", "Left", "Right"):
