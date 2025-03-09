@@ -17,11 +17,13 @@ myTable = """CREATE TABLE IF NOT EXISTS exercises(
 cursor.execute(myTable)
 
 # Placeholder data
-cursor.execute("INSERT INTO exercises (exerciseName, weight, repetitions, date)"
-"    VALUES ('Bench Press', 100, 10, '2025-03-08')")
+"""cursor.execute("INSERT INTO exercises (exerciseName, weight, repetitions, date)"
+"    VALUES ('Bench Press', 100, 10, '2025-03-08')")"""
 
 
-
+def showDBResults(arr):
+    for x in arr:
+        print(x)
 
 
 
@@ -62,7 +64,6 @@ class App(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
 
         self.exercises = {
-
             "Barbell Bench Press": "Chest",
             "Dumbbell Bench Press": "Chest",
             "Push-Ups": "Chest",
@@ -116,6 +117,11 @@ class App(tk.Tk):
                 exerciseFrame.grid(row=0, column=0, sticky="nsew")
             
             frame = self.frames[page]
+
+        elif page == HomePage:
+            # Update the homepage every time it's shown
+            frame = self.frames[HomePage]
+            frame.updateWorkoutHistory(self,self)
         else:
             # Original behavior for class-based pages
             frame = self.frames[page]
@@ -126,8 +132,48 @@ class App(tk.Tk):
 class HomePage(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
+        self.controller = controller
         homeLabel = tk.Label(self, text="Home", font=("Arial", 24), bg="grey12", fg="white")
-        homeLabel.pack(side="top", pady=20,padx=150)
+        homeLabel.pack(side="top", pady=20,anchor="center")
+
+        dateLabel = tk.Label(self, text="Today", font=("Arial", 12), bg="grey12", fg="white")
+        dateLabel.pack(side="top", pady=5)
+
+        self.labelsFrame = tk.Frame(self, bg="grey12")
+        self.labelsFrame.pack(side="top", fill="both", expand=True)
+
+        self.updateWorkoutHistory(parent,controller)
+
+
+
+
+    def updateWorkoutHistory(self,parent,controller):
+        cursor.execute("SELECT * FROM exercises WHERE date = ? ORDER BY ID DESC LIMIT 4 ",
+                        (datetime.now().strftime("%Y-%m-%d"),))
+        results = cursor.fetchall()
+        showDBResults(results)
+
+        for widget in self.labelsFrame.winfo_children():
+            #if widget not in [homeLabel]:  # Add any other widgets you want to keep in this list
+            widget.destroy()
+
+
+        if len(results) == 0:
+            labelText = "No exercises logged today"
+            exerciseLabel = tk.Label(self.labelsFrame, text=labelText, font=("Arial", 12), bg="grey12", fg="white")
+            exerciseLabel.pack(side="top", pady=30)
+            
+        else:
+            iterations = len(results) if len(results) < 4 else 4
+            # Run 4 times or until the end of the array
+            for x in range(0,iterations):
+                name = results[x][1]
+                weight = results[x][2]
+                reps = results[x][3]
+                labelText = f"{name} - {weight} x {reps}"# Format the output
+                exerciseLabel = tk.Label(self.labelsFrame, text=labelText, font=("Arial", 12), bg="grey12", fg="white")
+                exerciseLabel.pack(side="top", pady=10)
+
 
 class Settings(tk.Frame):
     def __init__(self, parent,controller):
@@ -135,17 +181,17 @@ class Settings(tk.Frame):
 
         # Page title
         settingsLabel = tk.Label(self, text="Settings", font=("Arial", 24), bg="grey12", fg="white")
-        settingsLabel.pack(pady=20,padx=150)  # Add some space
+        settingsLabel.pack(pady=20)  # Add some space
 
         # Button to switch back to Home Page
-
+    
 
 class ExerciseList(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
 
         exercisesLabel = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
-        exercisesLabel.pack(side="top", pady=20,padx=150)
+        exercisesLabel.pack(side="top",anchor='center', pady=20,padx=150)
 
         # Buttons for the exercise groups
         self.chestGroup = tk.Button(self,text="Chest",
@@ -174,7 +220,7 @@ class ChestGroup(tk.Frame):
         super().__init__(parent,bg="grey12")
         chestLabel = tk.Label(self, text="Chest Exercises",
         font=("Arial",24), bg="grey12", fg="white")
-        chestLabel.pack(side="top",pady=20,padx=50)
+        chestLabel.pack(side="top",pady=20)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -184,7 +230,7 @@ class ChestGroup(tk.Frame):
         self.benchPressBb = tk.Button(self, text="Barbell Bench Press",
          bg="grey9", fg="white", font=("Arial", 14),
          command=lambda: controller.showFrame("Barbell Bench Press"))
-        self.benchPressBb.pack(side="top",pady=10,padx=30)
+        self.benchPressBb.pack(side="top",pady=10)
         
         self.benchPressDb = tk.Button(self, text="Dumbbell Bench Press",
          bg="grey9", fg="white", font=("Arial", 14),
@@ -208,7 +254,7 @@ class BackGroup(tk.Frame):
             # Back exercises.
         super().__init__(parent,bg="grey12")
         backLabel = tk.Label(self, text="Back Exercises",font=("Arial",24), bg="grey12", fg="white")
-        backLabel.pack(side="top",pady=20,padx=50)
+        backLabel.pack(side="top",pady=20)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -243,7 +289,7 @@ class LegsGroup(tk.Frame):
             # Leg exercises.
         super().__init__(parent,bg="grey12")
         legsLabel = tk.Label(self, text="Legs Exercises",font=("Arial",24), bg="grey12", fg="white")
-        legsLabel.pack(side="top",pady=20,padx=50)
+        legsLabel.pack(side="top",pady=20)
 
         self.BackButton = tk.Button(self, text="Back",
          bg="grey9", fg="white", font=("Arial", 12),
@@ -286,7 +332,7 @@ class ExercisePage(tk.Frame):
         self.group = group# Can be used to organize data according to the muscle group
 
         exercisePageLabel = tk.Label(self, text=self.name, font=("Arial", 24), bg="grey12", fg="white")
-        exercisePageLabel.pack(side="top", pady=20,padx=0)# Places a label with the exercise name at the top
+        exercisePageLabel.pack(side="top", pady=20)# Places a label with the exercise name at the top
 
         """
         Weights & Repetitions Textbox, increment button and decrement button.
@@ -378,6 +424,7 @@ class ExercisePage(tk.Frame):
         """cursor.execute("SELECT * FROM exercises")
         results = cursor.fetchall()
         print(results)"""
+
 
     def validate_integer_input(self, event):
         if event.char.isdigit() or event.keysym in ("BackSpace", "Delete", "Left", "Right"):
