@@ -191,7 +191,7 @@ class ExerciseList(tk.Frame):
         super().__init__(parent,bg="grey12")
 
         exercisesLabel = tk.Label(self, text="Exercises", font=("Arial", 24), bg="grey12", fg="white")
-        exercisesLabel.pack(side="top",anchor='center', pady=20,padx=150)
+        exercisesLabel.pack(side="top",anchor='center', pady=20,padx=136)
 
         # Buttons for the exercise groups
         self.chestGroup = tk.Button(self,text="Chest",
