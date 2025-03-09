@@ -1,6 +1,9 @@
 import tkinter as tk
 import sqlite3
 from datetime import datetime
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
 
 # Database
 connection = sqlite3.connect("workout.db")# Create and connect to the database
@@ -58,7 +61,7 @@ class App(tk.Tk):
 
         for F in (HomePage, Settings,ExerciseList,# Loop through the pages
         ChestGroup,BackGroup,LegsGroup,
-        ExercisePage):
+        ExercisePage,graphPage):
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -145,6 +148,10 @@ class HomePage(tk.Frame):
         self.updateWorkoutHistory(parent,controller)
 
 
+        self.plotGraphButton = tk.Button(self, text="Open Graph Page",
+         bg="grey9", fg="white", font=("Arial", 12),
+         command=lambda: controller.showFrame(graphPage))
+        self.plotGraphButton.pack(side="top", pady=10)
 
 
     def updateWorkoutHistory(self,parent,controller):
@@ -340,7 +347,7 @@ class ExercisePage(tk.Frame):
         """
 
         # Textbox
-        weightInputFrame = tk.Frame(self, bg="grey12", width=120, height=80)
+        weightInputFrame = tk.Frame(self, bg="grey12", width=108, height=72)
         weightInputFrame.pack(side="top", pady=10)
         weightInputFrame.pack_propagate(False)  # Prevents the frame from resizing to fit its children
         
@@ -365,7 +372,7 @@ class ExercisePage(tk.Frame):
         """
 
         # Textbox for reps
-        repsInputFrame = tk.Frame(self, bg="grey12", width=120, height=80)# Create the textbox frame for reps
+        repsInputFrame = tk.Frame(self, bg="grey12", width=108, height=72)# Create the textbox frame for reps
         repsInputFrame.pack(side="top", pady=10)
         repsInputFrame.pack_propagate(False)  
 
@@ -432,6 +439,66 @@ class ExercisePage(tk.Frame):
             return
         else:
             return "break"# Cancels the keypress
+
+
+class graphPage(tk.Frame):
+    def __init__(self,parent,controller):
+        super().__init__(parent,bg="grey12")
+        self.controller = controller
+
+        graphLabel = tk.Label(self, text="Progress Graph", font=("Arial", 24),
+                               bg="grey12", fg="white")
+        graphLabel.pack(side="top", pady=20)
+
+        plotButton = tk.Button(self, text="Plot Graph",
+                                font=("Arial", 12), bg="grey9", fg="white",
+                                  command=lambda: self.plotGraph("Barbell Bench Press"))
+        
+        plotButton.pack(side="top", pady=10, fill="x")
+
+        
+
+    def plotGraph(self,exercise):
+        cursor.execute("SELECT * FROM exercises WHERE exerciseName = ?", (exercise,))
+        results = cursor.fetchall()
+
+        if results:
+            time = [datetime.strptime(result[4], "%Y-%m-%d") for result in results]
+            # List comphrension to extract the date values
+            weight = [result[2] for result in results]# Extract the weight values
+
+        """
+        plt.gcf() just gets the current "figure" (graph)
+        plt.gca() gets the current "axes" (the x and y axis)
+
+        """
+
+        plt.figure(figsize=(10, 6))# Set the size of the graph
+        plt.plot(time,weight,# x and y
+                  marker="o", # Mark the points with circles
+                  linestyle="-",# Straight, connected line
+                  label="Workout Data")# Plot the graph
+
+        plt.gca().xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
+        # Format the x-axis to show the date
+        plt.gca().xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+        # Set the x-axis to show only integers (days) at major intervals
+
+        plt.gcf().autofmt_xdate()# Rotates the labels to prevent overlap
+
+        plt.xlabel("Date")# Label the x-axis
+        plt.ylabel("Weight")# Label the y-axis
+        plt.title(f"{exercise} Progress")# Title of the graph
+        plt.grid(True)
+        plt.legend()# Show the legend
+        plt.show()
+
+
+
+
+
+
+
 
 if __name__ == "__main__":# Convention that indicates that this file is meant to be run
     app = App()
