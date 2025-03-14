@@ -61,7 +61,7 @@ class App(tk.Tk):
 
         for F in (HomePage, Settings,ExerciseList,# Loop through the pages
         ChestGroup,BackGroup,LegsGroup,
-        ExercisePage,graphPage):
+        ExercisePage,GraphPage):
             frame = F(self.container, self) # Creates an instance of the frame
             self.frames[F] = frame # Then stores it in the dictionary
             frame.grid(row=0, column=0, sticky="nsew") # Stacks the frames back
@@ -150,7 +150,7 @@ class HomePage(tk.Frame):
 
         self.plotGraphButton = tk.Button(self, text="Open Graph Page",
          bg="grey9", fg="white", font=("Arial", 12),
-         command=lambda: controller.showFrame(graphPage))
+         command=lambda: controller.showFrame(GraphPage))
         self.plotGraphButton.pack(side="top", pady=10)
 
 
@@ -441,7 +441,7 @@ class ExercisePage(tk.Frame):
             return "break"# Cancels the keypress
 
 
-class graphPage(tk.Frame):
+class GraphPage(tk.Frame):
     def __init__(self,parent,controller):
         super().__init__(parent,bg="grey12")
         self.controller = controller
@@ -450,16 +450,31 @@ class graphPage(tk.Frame):
                                bg="grey12", fg="white")
         graphLabel.pack(side="top", pady=20)
 
+        # Create a StringVar to store the selected value
+        self.exerciseToGraph = tk.StringVar(self)
+        self.exerciseToGraph.set("Select an exercise")  # Set the default value
+
+        exerciseDropDown = tk.OptionMenu(self, self.exerciseToGraph,"Barbell Bench Press",
+                                            "Dumbbell Bench Press", "Push-Ups", "Pec Fly",
+                                            "Deadlift", "Lat Pulldown", "Low Row", "Barbell Row",
+                                            "Barbell Squats", "Split Squats", "Leg Raises", "Hamstring Curls")
+
+        exerciseDropDown.pack(side="top", pady=10)
+  
+
         plotButton = tk.Button(self, text="Plot Graph",
                                 font=("Arial", 12), bg="grey9", fg="white",
-                                  command=lambda: self.plotGraph("Barbell Bench Press"))
+                                  command=self.plotGraph)
         
-        plotButton.pack(side="top", pady=10, fill="x")
+
+        plotButton.pack(side="bottom", pady=10, fill="x")
 
         
 
-    def plotGraph(self,exercise):
-        cursor.execute("SELECT * FROM exercises WHERE exerciseName = ?", (exercise,))
+    def plotGraph(self):
+
+
+        cursor.execute("SELECT * FROM exercises WHERE exerciseName = ?", (self.exerciseToGraph.get(),))
         results = cursor.fetchall()
 
         if results:
@@ -488,7 +503,7 @@ class graphPage(tk.Frame):
 
         plt.xlabel("Date")# Label the x-axis
         plt.ylabel("Weight")# Label the y-axis
-        plt.title(f"{exercise} Progress")# Title of the graph
+        plt.title(f"{self.exerciseToGraph.get()} Progress")# Title of the graph
         plt.grid(True)
         plt.legend()# Show the legend
         plt.show()
