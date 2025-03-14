@@ -190,6 +190,13 @@ class Settings(tk.Frame):
         settingsLabel = tk.Label(self, text="Settings", font=("Arial", 24), bg="grey12", fg="white")
         settingsLabel.pack(pady=20)  # Add some space
 
+        setKg = tk.Button(self, text="Set to KG",
+         bg="grey9", fg="white", font=("Arial", 12))
+        setKg.pack(pady=10)
+
+        setLbs = tk.Button(self, text="Set to LBS",
+         bg="grey9", fg="white", font=("Arial", 12))
+        setLbs.pack(pady=10)
         # Button to switch back to Home Page
     
 
